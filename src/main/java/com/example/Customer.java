@@ -30,7 +30,7 @@ public class Customer {
     public static List<Customer> loadCustomers(String path){
 
         List<Customer> customers=null;
-        Path file = Path.of("input.csv");
+        Path file = Path.of(path);
         try (Stream<String> lines = Files.lines(file)) {
             customers = lines.map(line -> {
                 Customer c = new Customer(line);

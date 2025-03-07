@@ -9,22 +9,19 @@ import java.util.stream.Stream;
 
 public class Customer {
     private final String UUID;
-    private String data;
-    private boolean isProcessed;
+    private Joke joke;
 
     public Customer(String UUID){
         this.UUID=UUID;
-        this.isProcessed=false;
     }
 
     @Override
     public String toString() {
-        return "%s,%s".formatted(UUID,data);
+        return "%s,%s".formatted(UUID,joke.value());
     }
 
-    public void process(){
-        data = "Analysis output";
-        isProcessed=true;
+    public void addJoke(ChuckClient chuck){
+        joke=chuck.joke();
     }
 
     public static List<Customer> loadCustomers(String path){
@@ -34,7 +31,6 @@ public class Customer {
         try (Stream<String> lines = Files.lines(file)) {
             customers = lines.map(line -> {
                 Customer c = new Customer(line);
-                c.process();
                 return c;
             }).toList();
         } catch (IOException e) {
@@ -45,7 +41,7 @@ public class Customer {
 
     public static void saveCustomers(List<Customer> customers, String path){
 
-        String header = "UUID,data";
+        String header = "UUID,Joke";
         try (PrintWriter writer = new PrintWriter(path)) {
             writer.println(header);
             for(Customer c : customers){
